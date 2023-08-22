@@ -1,31 +1,27 @@
 #include <stdio.h>
-
-int main() {
-
-  int n, i, flag = 0;
-  printf("Enter the value of m: ");
-  scanf("%d", &n);
-
-  // 0 and 1 are not prime numbers
-  // change flag to 1 for non-prime number
-  if (n == 0 || n == 1)
-    flag = 1;
-
-  for (i = 2; i <= n / 2; ++i) {
-
-    // if n is divisible by i, then n is not prime
-    // change flag to 1 for non-prime number
-    if (n % i == 0) {
-      flag = 1;
-      break;
+int main () {
+int m, i=2;
+int isprime = 1 ;
+printf("Enter a number :");
+scanf("%d", &m);
+if (m<=1){
+    isprime = 0;
+} else {
+while (i<=m/2){
+    if (m%i == 0){
+        isprime = 0;
+        break;
     }
-  }
+    i++;
+}
+}
+if(isprime){
+    printf("%d is a prime number.\n",m);
+} else {
+printf("%d is not a prime number.\n",m);
+}
+    return 0;
 
-  // flag is 0 for prime numbers
-  if (flag == 0)
-    printf("%d is a prime number.", n);
-  else
-    printf("%d is not a prime number.", n);
 
-  return 0;
+
 }
