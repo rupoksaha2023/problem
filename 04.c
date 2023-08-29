@@ -1,32 +1,17 @@
 #include <stdio.h>
-int main (){
-double student_number;
-printf ("Input Student Number :");
-scanf ("%lf", &student_number);
-int intstudentnumber = (int)student_number;
-switch (intstudentnumber)
-{
-case 80 ... 100 :
-    printf ("Grade A+\n");
-    break;
-    case 70 ... 79 :
-    printf ("Grade A\n");
-    break;
-    case 60 ... 69:
-    printf ("Grade B\n");
-    break;
-    case 50 ... 59:
-    printf ("Grade C\n");
-    break;
-    case 40 ... 49:
-    printf ("Grade D\n");
-    break;
-    case 0 ... 39:
-    printf ("Grade F\n");
-    break;
-    default :
-        printf ("Invalid input \n");
-        break;
+int main(){
+int n;
+printf ("Enter the number of levels:");
+scanf ("%d", &n);
+for(int i=1; i<=n;i++){
+
+    for (int j=1; j<=i; j++){
+        printf(" %d",j);
+    }
+    printf("\n");
 }
-return 0 ;
+
+return 0;
+
+
 }
