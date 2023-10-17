@@ -1,0 +1,71 @@
+#include <stdio.h>
+
+void reorderArray(int *arr, int size) {
+    int temp;
+
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = i + 1; j < size; j++) {
+            if (*(arr + j) < *(arr + i)) {
+                temp = *(arr + i);
+                *(arr + i) = *(arr + j);
+                *(arr + j) = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int arr[] = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+    int size = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Original Array: ");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    reorderArray(arr, size);
+
+    printf("\nReordered Array: ");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    return 0;
+}
+
+#include <stdio.h>
+
+int binarySearch(int *arr, int size, int target) {
+    int left = 0;
+    int right = size - 1;
+
+    while (left <= right) {
+        int mid = (left + right) / 2;
+
+        if (arr[mid] == target) {
+            return mid;  // Target found, return the index
+        } else if (arr[mid] < target) {
+            left = mid + 1;  // Adjust the left bound
+        } else {
+            right = mid - 1;  // Adjust the right bound
+        }
+    }
+
+    return -1;  // Target not found
+}
+
+int main() {
+    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    int target = 6;
+    
+    int result = binarySearch(arr, size, target);
+    
+    if (result != -1) {
+        printf("Element %d found at index %d\n", target, result);
+    } else {
+        printf("Element %d not found in the array\n", target);
+    }
+    
+    return 0;
+}
