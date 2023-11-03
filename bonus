@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char amount_str[10];
+    double amount;
+
+    // Input the dollar amount as a string
+    printf("Enter the check amount: ");
+    scanf("%s", amount_str);
+
+    // Convert the input string to a double
+    if (sscanf(amount_str, "%lf", &amount) != 1) {
+        printf("Error! Invalid input format.\n");
+        return 1;
+    }
+
+    // Check if the amount is negative
+    if (amount < 0) {
+        printf("Error! Can't print Check-protected format for negative amounts!\n");
+    } else if (amount > 99999.99) {
+        printf("Error! Can't print Check-protected format for values more than 99999.99!\n");
+    } else {
+        // Format the amount with commas for thousands and two decimal places
+        printf("Check-protected format : ");
+        if (amount < 1000) {
+            for (int i = 0; i < 5; i++) {
+                printf("*");
+            }
+            printf("%s\n", amount_str);
+        } else {
+            char formatted_amount[20];
+            sprintf(formatted_amount, "%'lf", amount);
+            printf("%s\n", formatted_amount);
+        }
+    }
+
+    return 0;
+}
