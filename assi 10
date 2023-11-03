@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <string.h>
+
+// Function to find and return the index of the first occurrence of a string in a file
+int findString(FILE *fp, const char *str)
+{
+    if (fp == NULL || str == NULL)
+    {
+        return -1; // Invalid input
+    }
+
+    char line[256]; // Buffer to read lines from the file
+    int lineIndex = 0; // Line index
+    int found = 0; // Flag to indicate if the string is found
+
+    while (fgets(line, sizeof(line), fp) != NULL)
+    {
+        lineIndex++;
+
+        // Check if the string is in the current line
+        char *position = strstr(line, str);
+        if (position != NULL)
+        {
+            found = 1;
+            int index = position - line; // Calculate the index of the substring in the line
+            fclose(fp);
+            return (lineIndex - 1) * sizeof(line) + index;
+        }
+    }
+
+    fclose(fp);
+
+    if (!found)
+    {
+        return -1; // String not found in the file
+    }
+
+    return -1; // Shouldn't reach here, but return -1 to indicate an error
+}
+
+// Function to delete the first occurrence of a string in a file
+int deleteString(FILE *fp, const char *str)
+{
+    if (fp == NULL || str == NULL)
+    {
+        return 0; // Invalid input
+    }
+
+    FILE *tempFile = tmpfile(); // Create a temporary file to write the modified content
+
+    if (tempFile == NULL)
+    {
+        return 0; // Error creating temporary file
+    }
+
+    char line[256]; // Buffer to read lines from the file
+    int found = 0; // Flag to indicate if the string is found and deleted
+
+    while (fgets(line, sizeof(line), fp) != NULL)
+    {
+        if (!found)
+        {
+            // Check if the string is in the current line
+            char *position = strstr(line, str);
+            if (position != NULL)
+            {
+                found = 1;
+                // Copy the part of the line before the string to the temporary file
+                fwrite(line, 1, position - line, tempFile);
+                continue; // Skip the string in the original file
+            }
+        }
+        // Write the entire line to the temporary file
+        fputs(line, tempFile);
+    }
+
+    fclose(fp);
+    fclose(tempFile);
+
+    if (found)
+    {
+        // Replace the original file with the temporary file
+        remove("your_filename.txt"); // Remove the original file
+        rename("tempfile.tmp", "your_filename.txt"); // Rename the temporary file to the original filename
+        return 1; // String found and deleted
+    }
+
+    return 0; // String not found in the file
+}
