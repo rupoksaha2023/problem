@@ -323,3 +323,80 @@ int main() {
     fclose(fp);
     return 0;
 }
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int deleteString(const char *filename, const char *str) {
+    FILE *file = fopen(filename, "r");
+    
+    if (file == NULL) {
+        return -1; // File not found or cannot be opened
+    }
+
+    char buffer[4096]; // You can adjust the buffer size as needed
+
+    size_t str_len = strlen(str);
+    size_t read, write;
+    int found = 0;
+
+    FILE *temp_file = fopen("tempfile.txt", "w");
+
+    if (temp_file == NULL) {
+        fclose(file);
+        return -1; // Error creating a temporary file
+    }
+
+    while ((read = fread(buffer, 1, sizeof(buffer), file) > 0)) {
+        char *ptr = buffer;
+        while ((ptr = strstr(ptr, str)) != NULL) {
+            // Check if the string is found
+            if (found == 0) {
+                // This is the first occurrence of the string, so we skip it
+                fwrite(buffer, 1, ptr - buffer, temp_file);
+                found = 1;
+            }
+            ptr += str_len;
+        }
+
+        if (found) {
+            // Write the remaining part of the buffer
+            fwrite(ptr, 1, buffer + read - ptr, temp_file);
+        } else {
+            // The string was not found, write the entire buffer
+            fwrite(buffer, 1, read, temp_file);
+        }
+    }
+
+    fclose(file);
+    fclose(temp_file);
+
+    // Replace the original file with the temporary file
+    remove(filename);
+    rename("tempfile.txt", filename);
+
+    return found; // 1 if the string is deleted, 0 if not found
+}
+
+int main() {
+    const char *filename = "example.txt";
+    const char *str = "10";
+    
+    int result = deleteString(filename, str);
+    
+    if (result == 1) {
+        printf("String deleted.\n");
+    } else if (result == 0) {
+        printf("String not found.\n");
+    } else if (result == -1) {
+        printf("File not found or cannot be opened.\n");
+    } else {
+        printf("An error occurred.\n");
+    }
+
+    return 0;
+}
