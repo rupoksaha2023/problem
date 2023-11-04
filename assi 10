@@ -278,3 +278,48 @@ int main() {
     fclose(file);
     return 0;
 }
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int findString(FILE *fp, const char *str) {
+    char buffer[1024]; // Adjust the buffer size as needed
+    int index = 0;
+
+    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+        index++;
+        if (strstr(buffer, str) != NULL) {
+            return index;
+        }
+    }
+
+    return -1;
+}
+
+int main() {
+    FILE *fp;
+    char filename[] = "hafiz.txt"; // Replace with your file name
+    char searchStr[] = "hafiz"; // Replace with your search string
+
+    fp = fopen(filename, "r");
+
+    if (fp == NULL) {
+        perror("Error opening file");
+        return 1;
+    }
+
+    int result = findString(fp, searchStr);
+
+    if (result != -1) {
+        printf("String found at line: %d\n", result);
+    } else {
+        printf("String not found in the file.\n");
+    }
+
+    fclose(fp);
+    return 0;
+}
